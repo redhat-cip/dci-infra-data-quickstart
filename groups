@@ -1,3 +1,5 @@
-# UUID                                  	Group Name
-#
-1e0ff9b458f92d1eed4a19b81b753814244cf39c	dci-infra-data-quickstart-ptl
+# UUID          Group Name
+9562193e1f1647ee1c2004b4fb7996e84ae7e717 	Non-Interactive Users
+4c5e61189ef24ae626313fa2ab8542b94f25da78       	dci-infra-data-quickstart-core
+1e0ff9b458f92d1eed4a19b81b753814244cf39c        	dci-infra-data-quickstart-ptl
+global:Registered-Users		Registered Users
