@@ -1,0 +1,20 @@
+[elasticsearch]
+localhost ansible_connection=local ansible_ssh_user=root
+
+[postgresql]
+localhost ansible_connection=local ansible_ssh_user=root
+
+[dci-api]
+localhost ansible_connection=local ansible_ssh_user=root
+
+[dci-ui]
+localhost ansible_connection=local ansible_ssh_user=root
+
+[rabbitmq]
+localhost ansible_connection=local ansible_ssh_user=root
+
+[redis]
+localhost ansible_connection=local ansible_ssh_user=root
+
+[sensu]
+localhost ansible_connection=local ansible_ssh_user=root

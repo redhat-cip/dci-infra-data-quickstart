@@ -1,0 +1,71 @@
+# -*- encoding: utf-8 -*-
+#
+# Copyright 2015 Red Hat, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+---
+# Red Hat specific.
+# If the system will subscribe to rhn
+rhn_user: john
+rhn_password: password
+rhn_pool: apool
+
+# Common
+#
+hostname: localhost
+
+# DCI
+#
+adminpassword: admin
+
+# Database
+#
+dbname: dci
+dbuser: dci
+dbpassword: dci
+dbhost: 127.0.0.1
+dbbackuppath: /var/tmp
+
+# API
+#
+apihost: 127.0.0.1
+
+# Elasticsearch
+#
+eshost: 127.0.0.1
+
+# HTTPD
+#
+servername: my.dci.com
+api_servername: api.my.dci.com
+ui_servername: ui.my.dci.com
+monitoring_servername: monitoring.my.dci.com
+serveradmin: distributed-ci@dci.com
+
+# Sensu
+#
+sensu_datacenter_name: 'Distributed-CI'
+
+sensu_rabbitmq_listen_address: '127.0.0.1'
+sensu_rabbitmq_vhost: '/sensu'
+sensu_rabbitmq_user: sensu
+sensu_rabbitmq_password: secret
+
+sensu_redis_listen_address: '127.0.0.1'
+
+sensu_api_listen_address: '127.0.0.1'
+sensu_api_port: 4567
+
+sensu_dashboard_listen_address: '0.0.0.0'
+sensu_dashboard_port: 3000
