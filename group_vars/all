@@ -71,3 +71,22 @@ sensu_dashboard_listen_address: '0.0.0.0'
 sensu_dashboard_port: 3000
 sensu_dashboard_admin_password: admin_secret
 sensu_dashboard_guest_password: guest_secret
+
+# Collectd
+#
+collectd_network_ip: 127.0.0.1
+
+# InfluxDB
+#
+influxdb_collectd_bind_address: 127.0.0.1
+influxdb_collectd_port: 25286
+influxdb_collectd_database: collectd
+influxdb_collectd_typesdb: /usr/share/collectd/types.db
+
+# Grafana
+#
+grafana_server_protocol: http
+grafana_server_http_addr: 127.0.0.1
+grafana_server_http_port: 3001
+grafana_security_admin_user: admin
+grafana_security_admin_password: admin
