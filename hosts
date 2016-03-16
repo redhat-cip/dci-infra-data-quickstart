@@ -18,3 +18,9 @@ localhost ansible_connection=local ansible_ssh_user=root
 
 [sensu]
 localhost ansible_connection=local ansible_ssh_user=root
+
+[influxdb]
+localhost ansible_connection=local ansible_ssh_user=root
+
+[grafana]
+localhost ansible_connection=local ansible_ssh_user=root
