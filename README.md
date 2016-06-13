@@ -1,4 +1,4 @@
-dci-indra-data-quickstart
+dci-infra-data-quickstart
 =========================
 
 Objective
