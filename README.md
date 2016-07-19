@@ -22,6 +22,7 @@ The succession of commands looks like
 ```
 #> git clone http://github.com/redhat-cip/dci-infra
 #> cd dci-infra
+#> ansible-galaxy install -r installed_roles -p roles
 #> git clone http://github.com/redhat-cip/dci-infra-data-quickstart data
 #> ansible-playbook -i data/hosts playbook.yml --tags dci-core
 ```
