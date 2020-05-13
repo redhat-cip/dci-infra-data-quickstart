@@ -37,9 +37,20 @@ dbpassword: dci
 dbhost: 127.0.0.1
 dbbackuppath: /var/tmp
 
+# UI
+#
+
+sso_url: http://127.0.0.1/sso
+sso_realm: "redhat-external"
+sso_client_id: "dci"
+sso_read_only_group: "redhat:employees"
+sso_public_key: ""
+
+
 # API
 #
 apihost: 127.0.0.1
+apiip: 127.0.0.1
 
 # Elasticsearch
 #
@@ -53,35 +64,8 @@ ui_servername: ui.my.dci.com
 monitoring_servername: monitoring.my.dci.com
 serveradmin: distributed-ci@dci.com
 
-# Sensu
-#
-sensu_datacenter_name: 'Distributed-CI'
-
-sensu_rabbitmq_listen_address: '127.0.0.1'
-sensu_rabbitmq_vhost: '/sensu'
-sensu_rabbitmq_user: sensu
-sensu_rabbitmq_password: secret
-
-sensu_redis_listen_address: '127.0.0.1'
-
-sensu_api_listen_address: '127.0.0.1'
-sensu_api_port: 4567
-
-sensu_dashboard_listen_address: '0.0.0.0'
-sensu_dashboard_port: 3000
-sensu_dashboard_admin_password: admin_secret
-sensu_dashboard_guest_password: guest_secret
-
-# Collectd
-#
-collectd_network_ip: 127.0.0.1
-
-# InfluxDB
-#
-influxdb_collectd_bind_address: 127.0.0.1
-influxdb_collectd_port: 25286
-influxdb_collectd_database: collectd
-influxdb_collectd_typesdb: /usr/share/collectd/types.db
+wsgi_enabled: False
+ssl_enabled: False
 
 # Grafana
 #
@@ -90,3 +74,6 @@ grafana_server_http_addr: 127.0.0.1
 grafana_server_http_port: 3001
 grafana_security_admin_user: admin
 grafana_security_admin_password: admin
+
+prometheus_apache_exporter_opts:
+  - "-scrape_uri='http://127.0.0.1/server-status/?auto'"
