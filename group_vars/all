@@ -76,4 +76,4 @@ grafana_security_admin_user: admin
 grafana_security_admin_password: admin
 
 prometheus_apache_exporter_opts:
-  - "-scrape_uri='http://127.0.0.1/server-status/?auto'"
+  - "scrape_uri='http://127.0.0.1/server-status/?auto'"
