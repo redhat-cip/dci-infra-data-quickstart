@@ -69,11 +69,106 @@ ssl_enabled: False
 
 # Grafana
 #
-grafana_server_protocol: http
-grafana_server_http_addr: 127.0.0.1
-grafana_server_http_port: 3001
-grafana_security_admin_user: admin
-grafana_security_admin_password: admin
+grafana_configs:
+  - section: server
+    option: protocol
+    value: http
+  - section: security
+    option: admin_user
+    value: admin
+  - section: security
+    option: admin_password
+    value: admin
 
 prometheus_apache_exporter_opts:
   - "scrape_uri='http://127.0.0.1/server-status/?auto'"
+
+prometheus_blackbox_exporter_opts:
+  - log.level=debug
+  - config.file=/etc/prometheus/blackbox.yml
+
+prometheus_node_exporter_opts:
+  - log.level=debug
+
+prometheus_server_opts:
+  - config.file=/etc/prometheus/prometheus.yml
+  - storage.tsdb.path=/var/lib/prometheus/data
+
+prometheus_server_globals:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+prometheus_server_rule_files:
+  - rules.d/ssl.rules
+  - rules.d/system.rules
+
+prometheus_server_scrape_configs:
+ - job_name: 'node resources'
+   scrape_interval: 15s
+   static_configs:
+     - targets:
+       - localhost:9100
+ - job_name: 'apache resources'
+   scrape_interval: 15s
+   static_configs:
+     - targets:
+       - localhost:9117
+ - job_name: 'blackbox_2xx'
+   metrics_path: /probe
+   params:
+     module: [http_2xx]
+   static_configs:
+     - targets:
+       - localhost
+   relabel_configs:
+      - source_labels: [__address__]
+        regex: (.*?)(:80)?
+        target_label: __param_target
+        replacement: https://${1}
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: monitoring.distributed-ci.io:9115
+ - job_name: 'blackbox_400'
+   metrics_path: /probe
+   params:
+     module: [http_400]
+   static_configs:
+     - targets:
+       - localhost
+   relabel_configs:
+      - source_labels: [__address__]
+        regex: (.*?)(:80)?
+        target_label: __param_target
+        replacement: https://${1}
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: monitoring.distributed-ci.io:9115
+ - job_name: 'blackbox_401'
+   metrics_path: /probe
+   params:
+     module: [http_401]
+   static_configs:
+     - targets:
+       - localhost
+   relabel_configs:
+      - source_labels: [__address__]
+        regex: (.*?)(:80)?
+        target_label: __param_target
+        replacement: https://${1}
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: monitoring.distributed-ci.io:9115
+ - job_name: 'mtail'
+   metrics_path: /metrics
+   scrape_interval: 15s
+   static_configs:
+     - targets:
+       - localhost:3903
+
+prometheus_server_alertmanagers:
+  - static_configs:
+    - targets:
+      - '127.0.0.1:9093'
