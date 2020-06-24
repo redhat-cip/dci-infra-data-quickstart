@@ -52,6 +52,29 @@ sso_public_key: ""
 apihost: 127.0.0.1
 apiip: 127.0.0.1
 
+repo_cacert: ""
+repo_sslcacertfile: /tmp/repocacertfile
+repo_cakey: ""
+repo_sslcakeyfile: /tmp/repo_sslcakeyfile
+repo_servercert: ""
+repo_sslcertificatefile: /tmp/repo_sslcertificatefile
+repo_serverkey: ""
+repo_sslcertificatekeyfile: /tmp/repo_sslcertificatekeyfile
+
+store_engine: file
+store_files_container: files
+store_components_container: components
+
+zmq_conn: "tcp://127.0.0.1:5700"
+
+certification_url: "https://access.redhat.com/hydra/rest/cwe/xmlrpc/v2"
+
+dci_worker_email_server: 127.0.0.1:25
+dci_worker_email_account: dummy
+dci_worker_email_password: dummy
+dci_worker_dlrn_login: dummy
+dci_worker_dlrn_password: dummy
+
 # Elasticsearch
 #
 eshost: 127.0.0.1

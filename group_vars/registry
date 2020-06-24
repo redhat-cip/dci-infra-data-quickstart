@@ -1,0 +1,24 @@
+---
+registry_sslcertificatefile: /tmp/registry_sslcertificatefile
+registry_sslcertificatekeyfile: /tmp/registry_sslcertificatekeyfile
+registry_servername: localhost
+
+registry_users:
+  - name: toto
+    password: toto
+    filter: toto
+    actions: ['PUSH', 'PULL']
+  - name: tata
+    password: tata
+    filter: tata
+    actions: ['LIST', 'PULL']
+
+store_username: dummy
+store_password: dummy
+store_auth_url: https://dummy
+store_tenant_name: dummy
+store_identity_api_version: 3
+store_user_domain_name: dummy
+store_project_domain_name: dummy
+store_region: dummy
+store_registry_container: dummy
