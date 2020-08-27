@@ -195,3 +195,6 @@ prometheus_server_alertmanagers:
   - static_configs:
     - targets:
       - '127.0.0.1:9093'
+
+fail2ban_ignored_ips:
+  - 8.8.8.8     # Dummy value just to check for existence of the setting

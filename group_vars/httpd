@@ -1,7 +1,6 @@
 ---
 mtail_logs:
-  - /var/log/httpd/ui.my.dci.com_log
-  - /var/log/httpd/access_log
+  - /var/log/httpd/*access_log
 
 mtail_programs:
   - files/mtail_progs/httpd.mtail
