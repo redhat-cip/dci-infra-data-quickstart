@@ -1,0 +1,7 @@
+---
+repo_rootdir: /repo
+repo_servername: repo
+
+dci_feeder_pubkey: ""
+
+nginxpassword: dummy:dummy

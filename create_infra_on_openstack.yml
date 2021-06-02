@@ -1,0 +1,191 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Get the (first) public network
+      os_networks_info:
+        cloud: pctt
+        filters:
+          router:external: true
+          shared: true
+          status: "ACTIVE"
+      register: pubnet_result
+      when: quickstart_pubnet is not defined
+
+    - name: Create our network
+      os_network:
+        cloud: pctt
+        name: dci_quickstart
+      register: net_result
+
+    - name: Create our subnet
+      os_subnet:
+        cloud: pctt
+        name: dci_quickstart
+        network_name: dci_quickstart
+        cidr: 192.168.36.0/24
+      register: subnet_result
+
+    - name: Create our router
+      os_router:
+        cloud: pctt
+        name: dci_quickstart
+        interfaces:
+          - "{{ subnet_result.subnet.id }}"
+        network: "{% if quickstart_pubnet is defined %}{{ quickstart_pubnet }}{% else %}{{ pubnet_result.openstack_networks[0].id }}{% endif %}"
+
+    - name: Create a 500G volume for the feeder
+      os_volume:
+        cloud: pctt
+        size: 100
+        display_name: dci_quickstart_feeder
+      register: feeder_volume_result
+
+    - name: Create a 500G volume for the repo
+      os_volume:
+        cloud: pctt
+        size: 100
+        display_name: dci_quickstart_repo
+      register: repo_volume_result
+
+    - name: Create api server
+      os_server:
+        cloud: pctt
+        name: dci_quickstart_api
+        image: CentOS-7-x86_64-GenericCloud-2009
+        key_name: nazpctt
+        flavor: m1.tiny
+        nics:
+          - net-id: "{{ net_result.network.id }}"
+        security_groups: default
+        auto_ip: true
+
+    - name: Create registry server
+      os_server:
+        cloud: pctt
+        name: dci_quickstart_registry
+        image: CentOS-7-x86_64-GenericCloud-2009
+        key_name: nazpctt
+        flavor: m1.tiny
+        nics:
+          - net-id: "{{ net_result.network.id }}"
+        security_groups: default
+        auto_ip: true
+
+    - name: Create db server
+      os_server:
+        cloud: pctt
+        name: dci_quickstart_db
+        image: CentOS-7-x86_64-GenericCloud-2009
+        key_name: nazpctt
+        flavor: m1.tiny
+        nics:
+          - net-id: "{{ net_result.network.id }}"
+        security_groups: default
+        auto_ip: true
+
+    - name: Create feeder server
+      os_server:
+        cloud: pctt
+        name: dci_quickstart_feeder
+        image: CentOS-7-x86_64-GenericCloud-2009
+        key_name: nazpctt
+        flavor: m1.tiny
+        volumes:
+          - "{{ feeder_volume_result.volume.id }}"
+        nics:
+          - net-id: "{{ net_result.network.id }}"
+        security_groups: default
+        auto_ip: true
+
+    - name: Create repo server
+      os_server:
+        cloud: pctt
+        name: dci_quickstart_repo
+        image: CentOS-7-x86_64-GenericCloud-2009
+        key_name: nazpctt
+        flavor: m1.tiny
+        volumes:
+          - "{{ repo_volume_result.volume.id }}"
+        nics:
+          - net-id: "{{ net_result.network.id }}"
+        security_groups: default
+        auto_ip: true
+
+    - name: Create monitoring server
+      os_server:
+        cloud: pctt
+        name: dci_quickstart_monitoring
+        image: CentOS-7-x86_64-GenericCloud-2009
+        key_name: nazpctt
+        flavor: m1.tiny
+        nics:
+          - net-id: "{{ net_result.network.id }}"
+        security_groups: default
+        auto_ip: true
+
+    - name: Refresh inventory
+      meta: refresh_inventory
+
+- hosts: dci_quickstart_feeder:dci_quickstart_repo
+  tasks:
+    - name: Create a partition on /dev/vdb
+      parted:
+        device: /dev/sdb
+        label: gpt
+        align: optimal
+        name: data
+        number: 1
+        part_start: "0%"
+        part_end: "100%"
+        state: present
+      become: yes
+
+    - name: Format partition on /dev/vdb
+      filesystem:
+        dev: /dev/sdb1
+        fstype: xfs
+      become: yes
+
+- hosts: dci_quickstart_feeder
+  tasks:
+    - name: Ensure the mountpoint for feeder cache exists
+      file:
+        path: /var/cache/dci-feeder-api
+        state: directory
+      become: yes
+
+    - name: Mount the data partition onto the correct path
+      mount:
+        src: /dev/sdb1
+        fstype: xfs
+        path: /var/cache/dci-feeder-api
+        state: mounted
+      become: yes
+
+- hosts: dci_quickstart_repo
+  tasks:
+    - name: Ensure the mountpoint for repo cache exists
+      file:
+        path: /repo
+        state: directory
+      become: yes
+
+    - name: Mount the data partition onto the correct path
+      mount:
+        src: /dev/sdb1
+        fstype: xfs
+        path: /repo
+        state: mounted
+      become: yes
+
+- hosts: dci_quickstart*
+  tasks:
+    - name: Install dci-release
+      package:
+        name: https://packages.distributed-ci.io/dci-release.el7.noarch.rpm
+      become: yes
+
+    - name: Install dci-sshpubkeys
+      package:
+        name: dci-sshpubkeys
+      become: yes

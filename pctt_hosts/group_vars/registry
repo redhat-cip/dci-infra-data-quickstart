@@ -1,0 +1,24 @@
+---
+registry_sslcertificatefile: /tmp/registry_sslcertificatefile
+registry_sslcertificatekeyfile: /tmp/registry_sslcertificatekeyfile
+registry_servername: localhost
+
+registry_users:
+  - name: toto
+    password: toto
+    filter: toto
+    actions: ['PUSH', 'PULL']
+  - name: tata
+    password: tata
+    filter: tata
+    actions: ['LIST', 'PULL']
+
+store_username: naz
+store_password: FCWcSQmstKvED6xZaBaYm44g6
+store_auth_url: http://10.41.11.12:5000/v3
+store_tenant_name: naz
+store_identity_api_version: 3
+store_user_domain_name: default
+store_project_domain_name: default
+store_region: regionOne
+store_registry_container: registry_quickstart

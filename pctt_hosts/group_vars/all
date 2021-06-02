@@ -1,0 +1,195 @@
+# -*- encoding: utf-8 -*-
+#
+# Copyright 2015 Red Hat, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+---
+# Red Hat specific.
+# If the system will subscribe to rhn
+rhn_user: john
+rhn_password: password
+rhn_pool: apool
+
+# Common
+#
+hostname: localhost
+
+# DCI
+#
+adminpassword: admin
+
+# Database
+#
+dbname: dci
+dbuser: dci
+dbpassword: dci
+dbhost: "{{ hostvars.dci_quickstart_db.openstack.private_v4 }}"
+dbbackuppath: /var/tmp
+
+# UI
+#
+
+sso_url: "http://{{ hostvars.dci_quickstart_api.openstack.private_v4 }}/sso"
+sso_realm: "redhat-external"
+sso_client_id: "dci"
+sso_read_only_group: "redhat:employees"
+sso_public_key: ""
+
+
+# API
+#
+apihost: "{{ hostvars.dci_quickstart_api.openstack.private_v4 }}"
+apiip: "{{ hostvars.dci_quickstart_api.openstack.private_v4 }}"
+
+repo_cacert: ""
+repo_sslcacertfile: /tmp/repocacertfile
+repo_cakey: ""
+repo_sslcakeyfile: /tmp/repo_sslcakeyfile
+repo_servercert: ""
+repo_sslcertificatefile: /tmp/repo_sslcertificatefile
+repo_serverkey: ""
+repo_sslcertificatekeyfile: /tmp/repo_sslcertificatekeyfile
+
+store_engine: file
+store_files_container: files
+store_components_container: components
+
+zmq_conn: "tcp://127.0.0.1:5700"
+
+certification_url: "https://access.redhat.com/hydra/rest/cwe/xmlrpc/v2"
+
+dci_worker_email_server: 127.0.0.1:25
+dci_worker_email_account: dummy
+dci_worker_email_password: dummy
+dci_worker_dlrn_login: dummy
+dci_worker_dlrn_password: dummy
+
+# HTTPD
+#
+servername: my.dci.com
+api_servername: api.my.dci.com
+ui_servername: ui.my.dci.com
+monitoring_servername: monitoring.my.dci.com
+serveradmin: distributed-ci@dci.com
+
+wsgi_enabled: False
+ssl_enabled: False
+
+# Grafana
+#
+grafana_configs:
+  - section: server
+    option: protocol
+    value: http
+  - section: security
+    option: admin_user
+    value: admin
+  - section: security
+    option: admin_password
+    value: admin
+
+prometheus_apache_exporter_opts:
+  - "scrape_uri='http://127.0.0.1/server-status/?auto'"
+
+prometheus_blackbox_exporter_opts:
+  - log.level=debug
+  - config.file=/etc/prometheus/blackbox.yml
+
+prometheus_node_exporter_opts:
+  - log.level=debug
+
+prometheus_server_opts:
+  - config.file=/etc/prometheus/prometheus.yml
+  - storage.tsdb.path=/var/lib/prometheus/data
+
+prometheus_server_globals:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+prometheus_server_rule_files:
+  - rules.d/*.rules
+
+prometheus_server_scrape_configs:
+ - job_name: 'node resources'
+   scrape_interval: 15s
+   static_configs:
+     - targets:
+       - localhost:9100
+ - job_name: 'apache resources'
+   scrape_interval: 15s
+   static_configs:
+     - targets:
+       - localhost:9117
+ - job_name: 'blackbox_2xx'
+   metrics_path: /probe
+   params:
+     module: [http_2xx]
+   static_configs:
+     - targets:
+       - localhost
+   relabel_configs:
+      - source_labels: [__address__]
+        regex: (.*?)(:80)?
+        target_label: __param_target
+        replacement: https://${1}
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: monitoring.distributed-ci.io:9115
+ - job_name: 'blackbox_400'
+   metrics_path: /probe
+   params:
+     module: [http_400]
+   static_configs:
+     - targets:
+       - localhost
+   relabel_configs:
+      - source_labels: [__address__]
+        regex: (.*?)(:80)?
+        target_label: __param_target
+        replacement: https://${1}
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: monitoring.distributed-ci.io:9115
+ - job_name: 'blackbox_401'
+   metrics_path: /probe
+   params:
+     module: [http_401]
+   static_configs:
+     - targets:
+       - localhost
+   relabel_configs:
+      - source_labels: [__address__]
+        regex: (.*?)(:80)?
+        target_label: __param_target
+        replacement: https://${1}
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: monitoring.distributed-ci.io:9115
+ - job_name: 'mtail'
+   metrics_path: /metrics
+   scrape_interval: 15s
+   static_configs:
+     - targets:
+       - localhost:3903
+
+prometheus_server_alertmanagers:
+  - static_configs:
+    - targets:
+      - '127.0.0.1:9093'
+
+fail2ban_ignored_ips:
+  - 8.8.8.8     # Dummy value just to check for existence of the setting

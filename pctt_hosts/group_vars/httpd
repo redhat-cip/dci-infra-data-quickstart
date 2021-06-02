@@ -1,0 +1,8 @@
+---
+mtail_logs:
+  - /var/log/httpd/*access_log
+
+mtail_programs:
+  - files/mtail_progs/httpd.mtail
+
+mtail_extra_options: "-logtostderr"

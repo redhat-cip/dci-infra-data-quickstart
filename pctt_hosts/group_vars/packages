@@ -1,0 +1,6 @@
+---
+supported_versions:
+  - el/7
+  - el/8
+
+packages_servername: packages
