@@ -1,3 +1,5 @@
+apihost: "{{ openstack.private_v4 }}"
+
 wsgi_enabled: True
 umb_key: toto
 umb_key_file_path: /tmp/umb_key_file
@@ -5,6 +7,5 @@ umb_ca: tata
 umb_ca_file_path: /tmp/umb_ca_file
 umb_crt: titi
 umb_crt_file_path: /tmp/umb_crt_file
-
 
 umb_brokers: asdasdasdasda

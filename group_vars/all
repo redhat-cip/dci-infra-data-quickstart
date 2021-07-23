@@ -50,7 +50,8 @@ sso_public_key: ""
 # API
 #
 apihost: 127.0.0.1
-apiip: 127.0.0.1
+apiips: 
+  - 127.0.0.1
 
 repo_cacert: ""
 repo_sslcacertfile: /tmp/repocacertfile

@@ -49,8 +49,9 @@ sso_public_key: ""
 
 # API
 #
-apihost: "{{ hostvars.dci_quickstart_api.openstack.private_v4 }}"
-apiip: "{{ hostvars.dci_quickstart_api.openstack.private_v4 }}"
+apiips:
+  - "{{ hostvars.dci_quickstart_api.openstack.private_v4 }}"
+  - "{{ hostvars.dci_quickstart_api2.openstack.private_v4 }}"
 
 repo_cacert: ""
 repo_sslcacertfile: /tmp/repocacertfile

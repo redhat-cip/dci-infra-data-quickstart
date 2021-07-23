@@ -33,14 +33,14 @@
           - "{{ subnet_result.subnet.id }}"
         network: "{% if quickstart_pubnet is defined %}{{ quickstart_pubnet }}{% else %}{{ pubnet_result.openstack_networks[0].id }}{% endif %}"
 
-    - name: Create a 500G volume for the feeder
+    - name: Create a 100G volume for the feeder
       os_volume:
         cloud: pctt
         size: 100
         display_name: dci_quickstart_feeder
       register: feeder_volume_result
 
-    - name: Create a 500G volume for the repo
+    - name: Create a 100G volume for the repo
       os_volume:
         cloud: pctt
         size: 100
@@ -52,7 +52,19 @@
         cloud: pctt
         name: dci_quickstart_api
         image: CentOS-7-x86_64-GenericCloud-2009
-        key_name: nazpctt
+        key_name: "{{ key_name }}"
+        flavor: m1.tiny
+        nics:
+          - net-id: "{{ net_result.network.id }}"
+        security_groups: default
+        auto_ip: true
+
+    - name: Create api 2 server
+      os_server:
+        cloud: pctt
+        name: dci_quickstart_api2
+        image: CentOS-8-x86_64-GenericCloud-2105
+        key_name: "{{ key_name }}"
         flavor: m1.tiny
         nics:
           - net-id: "{{ net_result.network.id }}"
@@ -64,7 +76,7 @@
         cloud: pctt
         name: dci_quickstart_registry
         image: CentOS-7-x86_64-GenericCloud-2009
-        key_name: nazpctt
+        key_name: "{{ key_name }}"
         flavor: m1.tiny
         nics:
           - net-id: "{{ net_result.network.id }}"
@@ -76,7 +88,7 @@
         cloud: pctt
         name: dci_quickstart_db
         image: CentOS-7-x86_64-GenericCloud-2009
-        key_name: nazpctt
+        key_name: "{{ key_name }}"
         flavor: m1.tiny
         nics:
           - net-id: "{{ net_result.network.id }}"
@@ -88,7 +100,7 @@
         cloud: pctt
         name: dci_quickstart_feeder
         image: CentOS-7-x86_64-GenericCloud-2009
-        key_name: nazpctt
+        key_name: "{{ key_name }}"
         flavor: m1.tiny
         volumes:
           - "{{ feeder_volume_result.volume.id }}"
@@ -102,7 +114,7 @@
         cloud: pctt
         name: dci_quickstart_repo
         image: CentOS-7-x86_64-GenericCloud-2009
-        key_name: nazpctt
+        key_name: "{{ key_name }}"
         flavor: m1.tiny
         volumes:
           - "{{ repo_volume_result.volume.id }}"
@@ -116,7 +128,7 @@
         cloud: pctt
         name: dci_quickstart_monitoring
         image: CentOS-7-x86_64-GenericCloud-2009
-        key_name: nazpctt
+        key_name: "{{ key_name }}"
         flavor: m1.tiny
         nics:
           - net-id: "{{ net_result.network.id }}"
@@ -180,9 +192,15 @@
 
 - hosts: dci_quickstart*
   tasks:
+    - name: import key
+      rpm_key:
+        state: present
+        key: https://packages.distributed-ci.io/RPM-GPG-KEY-distributedci
+      become: yes
+
     - name: Install dci-release
       package:
-        name: https://packages.distributed-ci.io/dci-release.el7.noarch.rpm
+        name: https://packages.distributed-ci.io/dci-release.el{{ ansible_distribution_major_version }}.noarch.rpm
       become: yes
 
     - name: Install dci-sshpubkeys
