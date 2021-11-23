@@ -4,7 +4,8 @@ wsgi_enabled: True
 feeder_dci_client_id: "feeder/toto"
 feeder_dci_api_secret: "secret"
 
-feeder_repo_rsync_target: "/tmp/repo"
+feeder_repo_rsync_host: "localhost"
+feeder_repo_rsync_directory: "/tmp/repo"
 
 feeder_registry_user: "dcifeeder_registry_user"
 feeder_registry_password: "dcifeeder_registry_password"
