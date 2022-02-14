@@ -51,21 +51,9 @@
       os_server:
         cloud: pctt
         name: dci_quickstart_api
-        image: CentOS-7-x86_64-GenericCloud-2009
+        image: CentOS-Stream-GenericCloud-8-20220125.1
         key_name: "{{ key_name }}"
-        flavor: m1.tiny
-        nics:
-          - net-id: "{{ net_result.network.id }}"
-        security_groups: default
-        auto_ip: true
-
-    - name: Create api 2 server
-      os_server:
-        cloud: pctt
-        name: dci_quickstart_api2
-        image: CentOS-8-x86_64-GenericCloud-2105
-        key_name: "{{ key_name }}"
-        flavor: m1.tiny
+        flavor: m1.small
         nics:
           - net-id: "{{ net_result.network.id }}"
         security_groups: default
@@ -75,9 +63,9 @@
       os_server:
         cloud: pctt
         name: dci_quickstart_registry
-        image: CentOS-7-x86_64-GenericCloud-2009
+        image: CentOS-7-x86_64-GenericCloud-2111
         key_name: "{{ key_name }}"
-        flavor: m1.tiny
+        flavor: m1.small
         nics:
           - net-id: "{{ net_result.network.id }}"
         security_groups: default
@@ -87,9 +75,9 @@
       os_server:
         cloud: pctt
         name: dci_quickstart_db
-        image: CentOS-7-x86_64-GenericCloud-2009
+        image: CentOS-7-x86_64-GenericCloud-2111
         key_name: "{{ key_name }}"
-        flavor: m1.tiny
+        flavor: m1.small
         nics:
           - net-id: "{{ net_result.network.id }}"
         security_groups: default
@@ -99,9 +87,9 @@
       os_server:
         cloud: pctt
         name: dci_quickstart_feeder
-        image: CentOS-7-x86_64-GenericCloud-2009
+        image: CentOS-7-x86_64-GenericCloud-2111
         key_name: "{{ key_name }}"
-        flavor: m1.tiny
+        flavor: m1.small
         volumes:
           - "{{ feeder_volume_result.volume.id }}"
         nics:
@@ -113,9 +101,9 @@
       os_server:
         cloud: pctt
         name: dci_quickstart_repo
-        image: CentOS-7-x86_64-GenericCloud-2009
+        image: CentOS-7-x86_64-GenericCloud-2111
         key_name: "{{ key_name }}"
-        flavor: m1.tiny
+        flavor: m1.small
         volumes:
           - "{{ repo_volume_result.volume.id }}"
         nics:
@@ -127,9 +115,21 @@
       os_server:
         cloud: pctt
         name: dci_quickstart_monitoring
-        image: CentOS-7-x86_64-GenericCloud-2009
+        image: CentOS-7-x86_64-GenericCloud-2111
         key_name: "{{ key_name }}"
-        flavor: m1.tiny
+        flavor: m1.small
+        nics:
+          - net-id: "{{ net_result.network.id }}"
+        security_groups: default
+        auto_ip: true
+
+    - name: Create blog server
+      os_server:
+        cloud: pctt
+        name: dci_quickstart_blog
+        image: CentOS-7-x86_64-GenericCloud-2111
+        key_name: "{{ key_name }}"
+        flavor: m1.small
         nics:
           - net-id: "{{ net_result.network.id }}"
         security_groups: default
@@ -192,6 +192,12 @@
 
 - hosts: dci_quickstart*
   tasks:
+    - name: Upgrade the ca-certificates package
+      package:
+        name: ca-certificates
+        state: latest
+      become: yes
+
     - name: import key
       rpm_key:
         state: present

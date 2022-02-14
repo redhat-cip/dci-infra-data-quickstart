@@ -1,0 +1,6 @@
+---
+blog_sslcertificatefile: /etc/ssl/letsencrypt/pem/blog.distributed-ci.io.pem
+blog_sslcertificatekeyfile: /etc/ssl/letsencrypt/private/blog.distributed-ci.io.key
+blog_sslcertificatechainfile: /etc/ssl/letsencrypt/pem/blog.distributed-ci.io-chain.pem
+blog_servername: blog.{{ openstack.accessIPv4 }}.nip.io
+blog_directory: /srv/www/dci_blog

@@ -3,32 +3,30 @@ dci_quickstart_db
 
 [dci-api]
 dci_quickstart_api
-dci_quickstart_api2
 
 [dci-repo]
 dci_quickstart_repo
 
 [dci-worker]
 dci_quickstart_api
-dci_quickstart_api2
 
 [dci-ui]
 dci_quickstart_api
-dci_quickstart_api2
 
 [packages]
 dci_quickstart_api
-dci_quickstart_api2
 
 [doc]
 dci_quickstart_api
-dci_quickstart_api2
 
 [registry]
 dci_quickstart_registry
 
 [prometheus-server]
 dci_quickstart_monitoring
+
+[blog]
+dci_quickstart_blog
 
 [dci-feeder]
 dci_quickstart_feeder
