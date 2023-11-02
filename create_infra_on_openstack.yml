@@ -201,7 +201,7 @@
     - name: import key
       rpm_key:
         state: present
-        key: https://packages.distributed-ci.io/RPM-GPG-KEY-distributedci
+        key: https://packages.distributed-ci.io/RPM-GPG-KEY-DCI-2024
       become: yes
 
     - name: Install dci-release
